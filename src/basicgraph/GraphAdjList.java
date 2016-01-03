@@ -1,7 +1,9 @@
 package basicgraph;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,7 +15,7 @@ import java.util.Set;
  * The edges of the graph are not labeled.
  * Representation of edges via adjacency lists.
  * 
- * @author UCSD MOOC development team and YOU
+ * @author UCSD MOOC development team and Jingjing
  *
  */
 public class GraphAdjList extends Graph {
@@ -97,7 +99,12 @@ public class GraphAdjList extends Graph {
 	 */		
 	 public List<Integer> getDistance2(int v) {
 		 // XXX: Implement this method in week 1
-		 return null;
+		 List<Integer> hop2 = new LinkedList<Integer>();
+		 for (int i : getNeighbors(v)) {
+			 hop2.addAll(getNeighbors(i));
+		 }
+		 Collections.sort(hop2);
+		 return hop2;
 	}
 	
 	/**

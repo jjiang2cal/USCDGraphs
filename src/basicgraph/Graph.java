@@ -2,7 +2,10 @@ package basicgraph;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +20,7 @@ import util.GraphLoader;
  * The edges of the graph are not labeled.
  * Representation of edges is left abstract.
  * 
- * @author UCSD MOOC development team and YOU
+ * @author UCSD MOOC development team and Jingjing
  * 
  */
 
@@ -80,9 +83,10 @@ public abstract class Graph {
 	 * @param v Index of the end point of the edge to be added. 
 	 */
 	public void addEdge(int v , int w) {
-		numEdges ++;
+		// numEdges ++;
 		if (v < numVertices && w < numVertices) {
-			implementAddEdge(v , w);			
+			implementAddEdge(v , w);
+			numEdges ++;
 		}
 		else {
 			throw new IndexOutOfBoundsException();
@@ -122,7 +126,36 @@ public abstract class Graph {
 	 */
 	public List<Integer> degreeSequence() {
 		// XXX: Implement in part 1 of week 1
-		return null;
+		// The following code can return a list of vertices
+		// sorted by the degrees from higher to lower
+		// if entry.getKey() is used.
+		/* 
+		Map<Integer, Integer> degreeMap = new HashMap<Integer, Integer>(numVertices * 4/3);
+		for (int i = 0; i < numVertices; i ++) {
+			degreeMap.put(i, getNeighbors(i).size() + getInNeighbors(i).size());
+		}
+		List<Map.Entry<Integer, Integer>> mapList = 
+				new ArrayList<Map.Entry<Integer, Integer>>(degreeMap.entrySet());
+		Collections.sort(mapList, new Comparator<Map.Entry<Integer, Integer>>() {
+			public int compare(Map.Entry<Integer, Integer> o1,
+                                           Map.Entry<Integer, Integer> o2) {
+				return (o2.getValue()).compareTo(o1.getValue());
+			}
+		});
+		List<Integer> retList = new LinkedList<Integer>();
+		for (Iterator<Map.Entry<Integer, Integer>> it = mapList.iterator(); it.hasNext();) {
+			Map.Entry<Integer, Integer> entry = it.next();
+			// retList.add(entry.getKey());
+			retList.add(entry.getValue());
+		}
+		*/
+		List<Integer> retList = new LinkedList<Integer>();
+		for (int i = 0; i < numVertices; i ++) {
+			retList.add(getNeighbors(i).size() + getInNeighbors(i).size());
+		}
+		Collections.sort(retList);
+		Collections.reverse(retList);
+		return retList;
 	}
 	
 	/**
@@ -228,7 +261,7 @@ public abstract class Graph {
 
 	
 	public static void main (String[] args) {
-		GraphLoader.createIntersectionsFile("data/maps/myucsd.map", "data/intersections/myucsd.intersections");
+		GraphLoader.createIntersectionsFile("data/maps/ucsd.map", "data/intersections/ucsd.intersections");
 		
 
 		// For testing of Part 1 functionality
@@ -261,6 +294,13 @@ public abstract class Graph {
 		// Test your distance2 code here.
 		System.out.println("Testing distance-two methods on sample graphs...");
 		System.out.println("Goal: implement method using two approaches.");
+		System.out.println("2 hops from vertex 1: ");
+		System.out.println(graphFromFile.getDistance2(1));
+		GraphAdjMatrix graphSimple = new GraphAdjMatrix();
+		GraphLoader.loadRoadMap("data/testdata/simpletest.map", graphSimple);
+		System.out.println("Testing adjMatrix: ");
+		System.out.println("2 hops from vertex 1: ");
+		System.out.println(graphSimple.getDistance2(1));
 
 
 		
